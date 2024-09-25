@@ -59,7 +59,7 @@ class Logs2Discord(BackgroundJobContrib):
 
         level = payload["level"]
         color = self.colors[level]
-        discord_msg = {payload["message"]}
+        discord_msg = payload["message"]
 
         r = post(
             self.discord_webhook_url,
