@@ -20,6 +20,14 @@ JobManager.LONG_RUNNING_JOBS = JobManager.LONG_RUNNING_JOBS + ("logs2discord",)
 
 class Logs2Discord(BackgroundJobContrib):
     job_name = "logs2discord"
+    colors = {
+        "DEBUG": "65535",
+        "INFO": "65280",
+        "NOTICE": "65280",
+        "WARNING": "16776960",
+        "ERROR": "16711680",
+        "CRITICAL": "16711680",
+    }
 
     def __init__(self, unit: str, experiment: str) -> None:
         super(Logs2Discord, self).__init__(
@@ -45,9 +53,20 @@ class Logs2Discord(BackgroundJobContrib):
             # avoid an infinite loop, https://github.com/Pioreactor/pioreactor-logs2discord/issues/2
             return
 
-        discord_msg = f"[{payload['level']}] [{unit}] [{payload['task']}] {payload['message']}"
+        level = payload['level']
+        color = self.colors[level]
+        discord_msg = {payload['message']}
 
-        r = post(self.discord_webhook_url, json={"content": discord_msg, 'username': unit})
+        r = post(self.discord_webhook_url,
+                json={
+                'username': "Pioreactor",
+                "embeds": [{
+                    "description": discord_msg,
+                    "author": {'name': unit},
+                    "title": payload['task']
+                    "color": color
+                    }]
+                })
 
         r.raise_for_status()
 
