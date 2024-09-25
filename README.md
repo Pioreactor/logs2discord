@@ -13,7 +13,9 @@ and create a dedicated channel in your Discord channel. I've called mine `experi
 
 2. Under your server's dropdown, find "Server Settings" -> "Integrations"
 
-3. Click "Webhooks" -> "New webhook" to create your webhook. Give it a name like `PioreactorLogs`, and choose the channel from step 1.
+3. Click "Webhooks" -> "New webhook" to create your webhook. Give it a name like `PioreactorLogs`, and choose the channel from step 1. Here's an avatar icon you can use too:
+
+![icon](https://github.com/Pioreactor/pioreactorui_frontend/blob/main/public/logo.png)
 
 4. Copy the webhook URL to your clipboard. We'll need this in a moment.
 
