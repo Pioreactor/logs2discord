@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-import json
 import logging
+from json import loads
 
 import click
 from pioreactor.background_jobs.base import BackgroundJobContrib
@@ -35,14 +35,18 @@ class Logs2Discord(BackgroundJobContrib):
         )
         self.discord_webhook_url = config.get("logs2discord", "discord_webhook_url")
         if not self.discord_webhook_url:
-            self.logger.error("[logs2discord] discord_webhook_url is not defined in your config.ini.")
-            raise ValueError("[logs2discord] discord_webhook_url is not defined in your config.ini.")
+            self.logger.error(
+                "[logs2discord] discord_webhook_url is not defined in your config.ini."
+            )
+            raise ValueError(
+                "[logs2discord] discord_webhook_url is not defined in your config.ini."
+            )
 
         self.log_level = config.get("logs2discord", "log_level", fallback="INFO")
         self.start_passive_listeners()
 
     def publish_to_discord(self, msg: MQTTMessage) -> None:
-        payload = json.loads(msg.payload)
+        payload = loads(msg.payload)
         topics = msg.topic.split("/")
         unit = topics[1]
 
@@ -53,20 +57,24 @@ class Logs2Discord(BackgroundJobContrib):
             # avoid an infinite loop, https://github.com/Pioreactor/pioreactor-logs2discord/issues/2
             return
 
-        level = payload['level']
+        level = payload["level"]
         color = self.colors[level]
-        discord_msg = {payload['message']}
+        discord_msg = {payload["message"]}
 
-        r = post(self.discord_webhook_url,
-                json={
-                'username': "Pioreactor",
-                "embeds": [{
-                    "description": discord_msg,
-                    "author": {'name': unit},
-                    "title": payload['task'],
-                    "color": color
-                    }]
-                })
+        r = post(
+            self.discord_webhook_url,
+            json={
+                "username": "Pioreactor",
+                "embeds": [
+                    {
+                        "description": discord_msg,
+                        "author": {"name": unit},
+                        "title": payload["task"],
+                        "color": color,
+                    }
+                ],
+            },
+        )
 
         r.raise_for_status()
 
