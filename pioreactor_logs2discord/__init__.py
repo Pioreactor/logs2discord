@@ -46,9 +46,8 @@ class Logs2Discord(BackgroundJobContrib):
             return
 
         discord_msg = f"[{payload['level']}] [{unit}] [{payload['task']}] {payload['message']}"
-        json = {"content": discord_msg, 'username': unit}
 
-        r = post(self.discord_webhook_url, json=json)
+        r = post(self.discord_webhook_url, json={"content": discord_msg, 'username': unit})
 
         r.raise_for_status()
 
