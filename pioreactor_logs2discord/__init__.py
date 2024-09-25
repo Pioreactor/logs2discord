@@ -63,7 +63,7 @@ class Logs2Discord(BackgroundJobContrib):
                 "embeds": [{
                     "description": discord_msg,
                     "author": {'name': unit},
-                    "title": payload['task']
+                    "title": payload['task'],
                     "color": color
                     }]
                 })
